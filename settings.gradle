@@ -1,0 +1,5 @@
+rootProject.name = 'Voltron'
+
+include ':coresys'
+include ':makeup'
+
