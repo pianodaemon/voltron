@@ -2,7 +2,20 @@ description = 'makeup'
 apply plugin: 'application'
 mainClassName = 'voltron.makeup.Main'
 
+apply plugin: "com.github.johnrengelman.shadow"
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 dependencies {
 
     implementation project(':coresys')
+
+    implementation "commons-cli:commons-cli:${commoncli_version}"
+}
+
+shadowJar {
+    archiveBaseName.set("${shadow_jar_name}")
+    archiveClassifier.set('')
+    archiveVersion.set('')
 }
