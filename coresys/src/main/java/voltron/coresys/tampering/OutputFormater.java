@@ -1,6 +1,8 @@
-package voltron.coresys;
+package voltron.coresys.tampering;
 
-public interface OutputFormater<W> {
+import voltron.coresys.VoltronException;
+
+interface OutputFormater<W> {
 
     public W render() throws VoltronException;
 

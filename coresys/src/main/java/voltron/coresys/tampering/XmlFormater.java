@@ -1,47 +1,41 @@
-package voltron.coresys;
+package voltron.coresys.tampering;
 
-import com.immortalcrab.voltron.portage.ComIbmWsAppManagement;
-import com.immortalcrab.voltron.portage.ObjectFactory;
 import com.immortalcrab.voltron.portage.ServerType;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 
-@AllArgsConstructor
-public class XmlFormater implements OutputFormater<ByteArrayOutputStream> {
+import lombok.Getter;
+import voltron.coresys.VoltronException;
+
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public abstract class XmlFormater implements OutputFormater<ByteArrayOutputStream> {
 
     private static final String XML_TAILORED_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     private static final String CTX_PATH = "com.immortalcrab.voltron.portage";
 
-    private final @NonNull
-    String description;
+    private final JAXBElement<ServerType> server;
 
-    private final boolean autoExpand;
+    public XmlFormater(String xmlFilePath) throws VoltronException {
+        this(unmarshalling(xmlFilePath));
+    }
 
-    private final @NonNull
-    Map<String, Object> kvArgs;
+    public abstract JAXBElement<ServerType> tailorHandler() throws VoltronException;
 
     @Override
     public ByteArrayOutputStream render() throws VoltronException {
-        ObjectFactory factory = new ObjectFactory();
-        ServerType st = factory.createServerType();
-        st.setDescription(description);
-        ComIbmWsAppManagement applicationManager = factory.createComIbmWsAppManagement();
-        applicationManager.setAutoExpand(Boolean.toString(autoExpand));
-        st.getIncludeOrVariableOrWebApplication().add(applicationManager);
-        JAXBElement<ServerType> server = factory.createServer(st);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        marshalling(server, os);
+        marshalling(tailorHandler(), os);
         return os;
     }
 
@@ -68,14 +62,16 @@ public class XmlFormater implements OutputFormater<ByteArrayOutputStream> {
         }
     }
 
-    protected static class LegoAssembler {
-
-        public static Map<String, Object> obtainMapFromKey(Map<String, Object> m, final String k) throws NoSuchElementException {
-            return LegoAssembler.obtainObjFromKey(m, k);
+    private static <T> JAXBElement<T> unmarshalling(File shippingXML) throws VoltronException {
+        try {
+            Unmarshaller unmarshaller = JAXBContext.newInstance(CTX_PATH).createUnmarshaller();
+            return (JAXBElement<T>) unmarshaller.unmarshal(shippingXML);
+        } catch (JAXBException ex) {
+            throw new VoltronException(ex);
         }
+    }
 
-        public static <T> T obtainObjFromKey(Map<String, Object> m, final String k) throws NoSuchElementException {
-            return (T) Optional.ofNullable(m.get(k)).orElseThrow();
-        }
+    private static <T> JAXBElement<T> unmarshalling(String filePath) throws VoltronException {
+        return (JAXBElement<T>) unmarshalling(new File(filePath));
     }
 }
