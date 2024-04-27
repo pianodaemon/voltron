@@ -3,25 +3,46 @@ package voltron.makeup;
 import voltron.coresys.VoltronException;
 
 import voltron.coresys.tampering.XmlFormater;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import voltron.coresys.alterations.Alteration00;
 
 public class Main {
 
-    public static void main(String[] args) throws VoltronException {
-        //ServerConfLoader serverConfLoader = new ServerConfLoader("hola.xml");
-        Map m = new HashMap<>();
-        m.put("xxxx", "ddddd");
-        m.put("sdsdsd", "true");
+    public static void main(String[] args) {
         try {
-            XmlFormater xmlFormater;
-            xmlFormater = new Alteration00("hola.xml", "hola mundo", false);
-            xmlFormater.renderFeaturingSave("hola.xml");
+            takeInputFromCli(args);
         } catch (VoltronException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
+    }
+
+    private static void takeInputFromCli(String[] args) throws VoltronException {
+        Options options = new Options()
+                .addOption(Option.builder("d")
+                        .longOpt("description")
+                        .required(true)
+                        .hasArg(true)
+                        .desc("This is a demo option upon cli")
+                        .build());
+
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmdLine;
+        String desc;
+        try {
+            cmdLine = parser.parse(options, args);
+            desc = cmdLine.getOptionValue('d');
+        } catch (ParseException ex) {
+            final String emsg = "Parser cli went mad";
+            throw new VoltronException(emsg, ex);
+        }
+
+        XmlFormater xmlFormater;
+        xmlFormater = new Alteration00("hola.xml", desc, false);
+        xmlFormater.renderFeaturingSave("hola.xml");
     }
 }
