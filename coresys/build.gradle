@@ -21,7 +21,8 @@ task genJaxb {
             mkdir(dir: classesDir)
 
             taskdef name: 'xjc', classname: 'com.sun.tools.xjc.XJCTask', classpath: configurations.jaxb.asPath
-            xjc(destdir: sourcesDir, binding: "${projectDir}/src/main/resources/lwp/binding.xml") {
+            xjc(destdir: sourcesDir, binding: "${projectDir}/src/main/resources/lwp/binding.xml",
+                package: 'com.immortalcrab.voltron.portage') {
                 schema(dir: "${projectDir}/src/main/resources/lwp", includes: '**/*.xsd')
                 produces(dir: sourcesDir, includes: '**/*.java')
             }
@@ -47,8 +48,6 @@ task genJaxb {
 }
 
 dependencies {
-    implementation "commons-codec:commons-codec:1.15"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jackson_version}"
 
     // JAX-B dependencies for JDK 8+
     implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2"

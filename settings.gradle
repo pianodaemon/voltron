@@ -1,4 +1,4 @@
-rootProject.name = 'Voltron'
+rootProject.name = 'voltron'
 
 include ':coresys'
 include ':makeup'

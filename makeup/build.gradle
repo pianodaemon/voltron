@@ -1,1 +1,8 @@
 description = 'makeup'
+apply plugin: 'application'
+mainClassName = 'voltron.makeup.Main'
+
+dependencies {
+
+    implementation project(':coresys')
+}
