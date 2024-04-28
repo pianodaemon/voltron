@@ -1,5 +1,5 @@
 ## Voltron (Ready To Form Voltron)
-Voltron stands for tampering liberty server xml file through a command line approach.
+Voltron stands for tampering the liberty server xml file through a command line approach.
 
 ### Build and run for debugging purposes
 #### Compile and run along with needed arguments
