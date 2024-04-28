@@ -1,11 +1,14 @@
 description = 'makeup'
-apply plugin: 'application'
-mainClassName = 'voltron.makeup.Main'
 
-apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
+
+application {
+    mainClassName = 'voltron.makeup.Main'
+}
 
 dependencies {
 
