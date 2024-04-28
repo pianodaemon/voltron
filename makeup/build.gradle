@@ -8,7 +8,7 @@ compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
 application {
-    mainClassName = 'voltron.makeup.Main'
+    mainClass = 'voltron.makeup.Main'
 }
 
 dependencies {
