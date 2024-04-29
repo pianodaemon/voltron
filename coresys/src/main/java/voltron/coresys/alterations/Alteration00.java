@@ -21,11 +21,13 @@ public class Alteration00 extends XmlFormater {
     @Override
     public JAXBElement<ServerType> tailorHandler() throws VoltronException {
         ServerType st = getServer().getValue();
-        ObjectFactory factory = new ObjectFactory();
-        ComIbmWsAppManagement applicationManager = factory.createComIbmWsAppManagement();
-        applicationManager.setAutoExpand(Boolean.toString(autoExpand));
         st.setDescription(description);
-        st.getIncludeOrVariableOrWebApplication().add(applicationManager);
+        for (Object element : st.getIncludeOrVariableOrWebApplication()) {
+            if (element instanceof ComIbmWsAppManagement) {
+                ((ComIbmWsAppManagement)element).setAutoExpand(Boolean.toString(autoExpand));
+                break;
+            }
+        }
         return getServer();
     }
 }
