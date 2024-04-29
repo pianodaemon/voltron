@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server>
+
+    <featureManager>
+	<feature>jmx-1.1</feature>
+	<feature>javaee-8.0</feature>
+        <feature>adminCenter-1.0</feature>
+        <feature>restConnector-2.0</feature>
+<feature>localConnector-1.0</feature>
+    </featureManager>
+
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  host="*"
+                  httpPort="9080"
+                  httpsPort="9443" />
+                  
+    <!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <quickStartSecurity userName="admin" userPassword="1234qwer" />
+    <restConnector id="defaultConnector" httpPort="9080" httpsPort="9443" /> 
+	    <!-- <keyStore id="defaultKeyStore" password="keystorePassword"/>-->
+    <enterpriseApplication id="guide-maven-multimodules-ear"
+        location="guide-maven-multimodules-ear.ear"
+        name="guide-maven-multimodules-ear" />
+
+    <webApplication id="app00" name="app00" contextRoot="pocland00" location="simplistic-1.0-OMEGA.war" />
+    <webApplication id="app01" name="app01" contextRoot="pocland01" location="simplistic-1.0-OMEGA.war" />
+    <webApplication id="app02" name="app02" contextRoot="pocland02" location="simplistic-1.0-OMEGA.war" />
+
+</server>

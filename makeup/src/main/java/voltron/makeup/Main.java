@@ -42,7 +42,7 @@ public class Main {
         }
 
         XmlFormater xmlFormater;
-        xmlFormater = new Alteration00("hola.xml", desc, false);
-        xmlFormater.renderFeaturingSave("hola.xml");
+        xmlFormater = new Alteration00("server_original.xml", desc, false);
+        xmlFormater.renderFeaturingSave("server.xml");
     }
 }
