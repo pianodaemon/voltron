@@ -21,9 +21,9 @@ task genJaxb {
             mkdir(dir: classesDir)
 
             taskdef name: 'xjc', classname: 'com.sun.tools.xjc.XJCTask', classpath: configurations.jaxb.asPath
-            xjc(destdir: sourcesDir, binding: "${projectDir}/src/main/resources/lwp/binding.xml",
+            xjc(destdir: sourcesDir, binding: "${projectDir}/src/main/resources/wlp/binding.xml",
                 package: 'com.immortalcrab.voltron.portage') {
-                schema(dir: "${projectDir}/src/main/resources/lwp", includes: '**/*.xsd')
+                schema(dir: "${projectDir}/src/main/resources/wlp", includes: '**/*.xsd')
                 produces(dir: sourcesDir, includes: '**/*.java')
             }
 
