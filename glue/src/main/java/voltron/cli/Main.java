@@ -1,6 +1,6 @@
 package voltron.cli;
 
-import voltron.coresys.VoltronException;
+import voltron.coresys.SculptorException;
 import voltron.coresys.RestClientException;
 import voltron.coresys.tampering.XmlFormater;
 import org.apache.commons.cli.CommandLine;
@@ -18,12 +18,12 @@ public class Main {
     public static void main(String[] args) {
         try {
             takeInputFromCli(args);
-        } catch (VoltronException | RestClientException ex) {
+        } catch (SculptorException | RestClientException ex) {
             ex.printStackTrace();
         }
     }
 
-    private static void takeInputFromCli(String[] args) throws VoltronException, RestClientException {
+    private static void takeInputFromCli(String[] args) throws SculptorException, RestClientException {
         Options options = new Options()
                 .addOption(Option.builder("d")
                         .longOpt("description")
@@ -40,7 +40,7 @@ public class Main {
             desc = cmdLine.getOptionValue('d');
         } catch (ParseException ex) {
             final String emsg = "Parser cli went mad";
-            throw new VoltronException(emsg, ex);
+            throw new SculptorException(emsg, ex);
         }
 
 

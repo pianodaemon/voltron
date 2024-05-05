@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import voltron.coresys.VoltronException;
+import voltron.coresys.SculptorException;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -32,14 +32,14 @@ public abstract class XmlFormater implements OutputFormater<ByteArrayOutputStrea
 
     private final JAXBElement<ServerType> server;
 
-    public XmlFormater(String xmlFilePath) throws VoltronException {
+    public XmlFormater(String xmlFilePath) throws SculptorException {
         this(unmarshalling(xmlFilePath));
     }
 
-    public abstract JAXBElement<ServerType> tailorHandler() throws VoltronException;
+    public abstract JAXBElement<ServerType> tailorHandler() throws SculptorException;
 
     @Override
-    public ByteArrayOutputStream render() throws VoltronException {
+    public ByteArrayOutputStream render() throws SculptorException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         Schema schema = loadSchema(getClass().getClassLoader().getResourceAsStream(WLP_LIBERTY_FULL_SCHEMA));
         marshalling(tailorHandler(), os, schema);
@@ -47,15 +47,15 @@ public abstract class XmlFormater implements OutputFormater<ByteArrayOutputStrea
     }
 
     @Override
-    public void saveOnStorage(String filePath, ByteArrayOutputStream pData) throws VoltronException {
+    public void saveOnStorage(String filePath, ByteArrayOutputStream pData) throws SculptorException {
         try (BufferedWriter out = new BufferedWriter(new FileWriter(filePath))) {
             out.write(pData.toString());
         } catch (IOException ex) {
-            throw new VoltronException(ex);
+            throw new SculptorException(ex);
         }
     }
 
-    private static void marshalling(JAXBElement<ServerType> server, ByteArrayOutputStream baos, Schema schema) throws VoltronException {
+    private static void marshalling(JAXBElement<ServerType> server, ByteArrayOutputStream baos, Schema schema) throws SculptorException {
         Marshaller marshaller;
         try {
             JAXBContext context = JAXBContext.newInstance(CTX_PATH);
@@ -66,29 +66,29 @@ public abstract class XmlFormater implements OutputFormater<ByteArrayOutputStrea
             baos.write(XML_TAILORED_HEADER.getBytes());
             marshaller.marshal(server, baos);
         } catch (IOException | JAXBException ex) {
-            throw new VoltronException(ex);
+            throw new SculptorException(ex);
         }
     }
 
-    private static <T> JAXBElement<T> unmarshalling(File shippingXML) throws VoltronException {
+    private static <T> JAXBElement<T> unmarshalling(File shippingXML) throws SculptorException {
         try {
             Unmarshaller unmarshaller = JAXBContext.newInstance(CTX_PATH).createUnmarshaller();
             return (JAXBElement<T>) unmarshaller.unmarshal(shippingXML);
         } catch (JAXBException ex) {
-            throw new VoltronException(ex);
+            throw new SculptorException(ex);
         }
     }
 
-    private static <T> JAXBElement<T> unmarshalling(String filePath) throws VoltronException {
+    private static <T> JAXBElement<T> unmarshalling(String filePath) throws SculptorException {
         return (JAXBElement<T>) unmarshalling(new File(filePath));
     }
 
-    public static Schema loadSchema(InputStream schemaStream) throws VoltronException {
+    public static Schema loadSchema(InputStream schemaStream) throws SculptorException {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             return factory.newSchema(new StreamSource(schemaStream));
         } catch (SAXException ex) {
-            throw new VoltronException("Failed to load XML schema.", ex);
+            throw new SculptorException("Failed to load XML schema.", ex);
         }
     }
 }
