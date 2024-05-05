@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.management.remote.JMXConnector;
 import voltron.coresys.RestClientException;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class LibertyConnREST {
 
     private static final int CRED_ELEMENT_NUMBER = 2;
@@ -17,9 +20,7 @@ public class LibertyConnREST {
     private final HashMap<String, Object> environment;
 
     public LibertyConnREST(String hostName, Integer port) throws RestClientException {
-        environment = new HashMap<>();
-        mHostName = hostName;
-        mPort = port;
+        this(hostName, port, new HashMap<>());
         setupEnvForLiberty();
     }
 
