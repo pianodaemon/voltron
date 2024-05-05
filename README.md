@@ -12,7 +12,42 @@ mv ./glue/build/libs/voltron.jar $YOUR_PRODUCTION_PATH
 #### Execution via jre (java runtime)
 Within production path proceed to execute via the java runtime.
 ```sh
-java -jar  ./voltron.jar [any application arguments]
+pianodaemon@LAPTOP-4RSVIK4C:~/voltron$ ./genks.sh
+Generating RSA private key, 2048 bit long modulus (2 primes)
+.............................................................................+++++
+...............................................................................................................+++++
+e is 65537 (0x010001)
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:US
+State or Province Name (full name) [Some-State]:California
+Locality Name (eg, city) []:SJO
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:Immortal crab systems
+Organizational Unit Name (eg, section) []:research
+Common Name (e.g. server FQDN or YOUR name) []:immortalcrab.com
+Email Address []:webmaster@immortalcrab.com
+Importing keystore key.p12 to key.jks...
+Entry for alias eplauchu successfully imported.
+Import command completed:  1 entries successfully imported, 0 entries failed or cancelled
+Keystore type: PKCS12
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+eplauchu, May 5, 2024, PrivateKeyEntry,
+Certificate fingerprint (SHA-256): 5D:24:B4:F9:AC:DB:77:F8:43:01:D6:02:20:57:DC:C9:EC:9D:57:08:3D:8C:DF:4C:33:8C:A2:4A:AC:60:3D:CD
+pianodaemon@LAPTOP-4RSVIK4C:~/voltron$ ls -lhs
+total 20K
+4.0K -rwxr-xr-x 1 pianodaemon pianodaemon  836 May  4 11:41 generate_key_store.sh
+4.0K -rw-r--r-- 1 pianodaemon pianodaemon 2.9K May  5 11:00 key.jks
+4.0K -rw------- 1 pianodaemon pianodaemon 2.7K May  5 11:00 key.p12
+4.0K -rw------- 1 pianodaemon pianodaemon 1.7K May  5 11:00 private.key
+4.0K -rw-r--r-- 1 pianodaemon pianodaemon 1.5K May  5 11:00 selfsigned.crt
 ```
 > Note: the `java runtime` is distributed by oracle without sdk.
 
@@ -22,7 +57,7 @@ System administrators can also wrap the execution through a shell script featuri
 pianodaemon@LAPTOP-4RSVIK4C:~/voltron$ cat voltron.sh
 #!/bin/sh
 
-VOLTRON_PATH="./glue/build/libs/"  # XXX: Set this up to any convenient path of yours
+VOLTRON_PATH="./glue/build/libs"   # XXX: Set this up to any convenient path of yours
 WLP_HOME=~/wlp                     # XXX: Set this up to any convenient path of yours
 JMX_REMOTE_USER_ID="admin"
 JMX_REMOTE_USER_PASS="1234qwer"
