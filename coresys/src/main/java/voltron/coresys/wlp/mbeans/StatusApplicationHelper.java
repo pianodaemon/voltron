@@ -1,4 +1,4 @@
-package package voltron.coresys.wlp.mbeans;
+package voltron.coresys.wlp.mbeans;
 
 import java.text.MessageFormat;
 import java.util.List;
