@@ -1,7 +1,9 @@
-#!/bin/sh -x
+#!/bin/sh
 
-VOLTRON_PATH="."  # XXX: Set this up to any convenient path of yours
-WLP_HOME=~/wlp
+VOLTRON_PATH="./glue/build/libs"   # XXX: Set this up to any convenient path of yours
+WLP_HOME=~/wlp                     # XXX: Set this up to any convenient path of yours
+JMX_REMOTE_USER_ID="admin"
+JMX_REMOTE_USER_PASS="1234qwer"
 KEY_STORE_PASSWORD="1234qwer"
 ALGO_KEY=PKCS12
 
@@ -10,7 +12,7 @@ MAIN_CMD="java \
   -Djavax.net.ssl.trustStore="${WLP_HOME}/usr/servers/defaultServer/resources/security/key.p12" \
   -Djavax.net.ssl.trustStorePassword=${KEY_STORE_PASSWORD} \
   -Djavax.net.ssl.trustStoreType=$ALGO_KEY \
-  -Djmx.remote.credentials=admin,1234qwer \
+  -Djmx.remote.credentials=${JMX_REMOTE_USER_ID},${JMX_REMOTE_USER_PASS} \
   voltron.cli.Main"
 
 $MAIN_CMD $@
