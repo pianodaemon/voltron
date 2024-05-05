@@ -14,7 +14,7 @@ application {
 dependencies {
 
     implementation project(':coresys')
-
+    implementation project(':restclient')
     implementation "commons-cli:commons-cli:${commoncli_version}"
 }
 

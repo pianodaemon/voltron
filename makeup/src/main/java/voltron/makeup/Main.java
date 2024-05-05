@@ -1,7 +1,7 @@
 package voltron.makeup;
 
 import voltron.coresys.VoltronException;
-
+import voltron.coresys.RestClientException;
 import voltron.coresys.tampering.XmlFormater;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -17,12 +17,12 @@ public class Main {
     public static void main(String[] args) {
         try {
             takeInputFromCli(args);
-        } catch (VoltronException ex) {
+        } catch (VoltronException | RestClientException ex) {
             ex.printStackTrace();
         }
     }
 
-    private static void takeInputFromCli(String[] args) throws VoltronException {
+    private static void takeInputFromCli(String[] args) throws VoltronException, RestClientException {
         Options options = new Options()
                 .addOption(Option.builder("d")
                         .longOpt("description")

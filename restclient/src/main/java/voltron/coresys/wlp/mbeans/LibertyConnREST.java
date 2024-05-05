@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import javax.management.remote.JMXConnector;
+import voltron.coresys.RestClientException;
 
 public class LibertyConnREST {
 
@@ -15,7 +16,7 @@ public class LibertyConnREST {
     private final Integer mPort;
     private final HashMap<String, Object> environment;
 
-    public LibertyConnREST(String hostName, Integer port) throws VoltronException {
+    public LibertyConnREST(String hostName, Integer port) throws RestClientException {
         environment = new HashMap<>();
         mHostName = hostName;
         mPort = port;
@@ -26,7 +27,7 @@ public class LibertyConnREST {
         return MessageFormat.format(CONNECTOR_TEMPLATE_URL, new Object[]{CONNECTOR_TYPE_REST, hostName, port});
     }
 
-    private void setupCredentials() throws VoltronException {
+    private void setupCredentials() throws Exception {
         String credentialsProperty = System.getProperty("jmx.remote.credentials");
 
         if (credentialsProperty != null) {
@@ -34,24 +35,28 @@ public class LibertyConnREST {
             if (credentials.length == CRED_ELEMENT_NUMBER) {
                 environment.put(JMXConnector.CREDENTIALS, credentials);
             } else {
-                throw new VoltronException("Invalid jmx.remote.credentials format. Expected 'username,password'.");
+                throw new Exception("Invalid jmx.remote.credentials format. Expected 'username,password'.");
             }
         } else {
-            throw new VoltronException("jmx.remote.credentials property not set.");
+            throw new Exception("jmx.remote.credentials property not set.");
         }
     }
 
-    private void setupEnvForLiberty() throws VoltronException {
+    private void setupEnvForLiberty() throws RestClientException {
         environment.put("com.ibm.ws.jmx.connector.client.disableURLHostnameVerification", Boolean.TRUE);
         environment.put("jmx.remote.protocol.provider.pkgs", "com.ibm.ws.jmx.connector.client");
-        setupCredentials();
+        try {
+            setupCredentials();
+        } catch (Exception ex) {
+            throw new RestClientException(ex);
+        }
     }
 
-    public Map<String, String> inquiryApplicationStatus() throws VoltronException {
+    public Map<String, String> inquiryApplicationStatus() throws RestClientException {
         try {
             return StatusApplicationHelper.inquiry(() -> shapeServiceURL(mHostName, mPort.toString()), environment);
         } catch (Exception ex) {
-            throw new VoltronException(ex);
+            throw new RestClientException(ex);
         }
     }
 }
