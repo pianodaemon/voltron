@@ -6,15 +6,15 @@ import javax.management.remote.JMXConnector;
 
 class MBeanHelper {
 
-    protected static final String CONNECTOR_TYPE_REST = "rest";
-    protected static final String CONNECTOR_TEMPLATE_URL = "service:jmx:{0}://{1}:{2}/IBMJMXConnectorREST";
+    private static final String CONNECTOR_TYPE_REST = "rest";
+    private static final String CONNECTOR_TEMPLATE_URL = "service:jmx:{0}://{1}:{2}/IBMJMXConnectorREST";
     private static final int CRED_ELEMENT_NUMBER = 2;
 
     public static String shapeServiceURL(final String hostName, final String port) {
         return MessageFormat.format(CONNECTOR_TEMPLATE_URL, new Object[]{CONNECTOR_TYPE_REST, hostName, port});
     }
 
-    public static void setupCredentials(Map<String, Object> environment) throws Exception {
+    private static void setupCredentials(Map<String, Object> environment) throws Exception {
         String credentialsProperty = System.getProperty("jmx.remote.credentials");
 
         if (credentialsProperty != null) {
@@ -27,5 +27,11 @@ class MBeanHelper {
         } else {
             throw new Exception("jmx.remote.credentials property not set.");
         }
+    }
+
+    public static void setupEnvForLiberty(Map<String, Object> environment) throws Exception {
+        environment.put("com.ibm.ws.jmx.connector.client.disableURLHostnameVerification", Boolean.TRUE);
+        environment.put("jmx.remote.protocol.provider.pkgs", "com.ibm.ws.jmx.connector.client");
+        setupCredentials(environment);
     }
 }
