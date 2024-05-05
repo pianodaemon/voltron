@@ -1,6 +1,6 @@
 rootProject.name = 'voltron'
 
 include ':restclient'
-include ':coresys'
-include ':makeup'
+include ':sculptor'
+include ':glue'
 

@@ -3,17 +3,17 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
-description = 'makeup'
+description = 'glue'
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
 application {
-    mainClass = 'voltron.makeup.Main'
+    mainClass = 'voltron.cli.Main'
 }
 
 dependencies {
 
-    implementation project(':coresys')
+    implementation project(':sculptor')
     implementation project(':restclient')
     implementation "commons-cli:commons-cli:${commoncli_version}"
 }
