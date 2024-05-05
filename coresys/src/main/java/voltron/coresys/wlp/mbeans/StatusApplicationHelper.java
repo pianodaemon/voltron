@@ -18,7 +18,7 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import java.io.IOException;
 
-class StatusApplicationHelper extends MBeanHelper {
+final class StatusApplicationHelper extends MBeanHelper {
 
     private static final String APPLICATION_BEAN_NAME = "WebSphere:service=com.ibm.websphere.application.ApplicationMBean";
     private static final String APPLICATION_BEAN_PREFIX = "{0},name={1}";
