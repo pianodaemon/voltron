@@ -6,7 +6,7 @@ Voltron stands for tampering the liberty server xml file through a command line 
 Once the shadowJar has been succesfully compiled, please proceed to move it into your production's path
 ```sh
 ./gradlew shadowJar
-mv ./glue/build/libs/voltron.jar $YOUR_PRODUCTION_PATH
+mv ./glue/build/libs/voltron.jar $ANY_OTHER_PRODUCTION_PATH
 ```
 
 #### Liberty server configuration (defaultServer)
