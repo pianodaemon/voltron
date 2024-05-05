@@ -1,4 +1,4 @@
-package voltron.makeup;
+package voltron.cli;
 
 import voltron.coresys.VoltronException;
 import voltron.coresys.RestClientException;
@@ -9,6 +9,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import java.util.Map;
 import voltron.coresys.alterations.Alteration00;
 import voltron.coresys.wlp.mbeans.LibertyConnREST;
 
@@ -47,5 +48,7 @@ public class Main {
         xmlFormater = new Alteration00("server_original.xml", desc, false);
         xmlFormater.renderFeaturingSave("server.xml");
         LibertyConnREST lc = new LibertyConnREST("127.0.0.1", 9443);
+        Map<String, String> m = lc.inquiryAllApplicationStatus();
+        m.forEach((key, value) -> System.out.println(key + "->" + value));
     }
 }
