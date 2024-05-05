@@ -10,6 +10,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import voltron.coresys.alterations.Alteration00;
+import voltron.coresys.wlp.mbeans.LibertyConnREST;
 
 public class Main {
 
@@ -41,8 +42,10 @@ public class Main {
             throw new VoltronException(emsg, ex);
         }
 
+
         XmlFormater xmlFormater;
         xmlFormater = new Alteration00("server_original.xml", desc, false);
         xmlFormater.renderFeaturingSave("server.xml");
+        LibertyConnREST lc = new LibertyConnREST("127.0.0.1", 9443);
     }
 }
