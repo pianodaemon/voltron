@@ -1,5 +1,7 @@
 ## Voltron (Ready To Form Voltron)
-Voltron stands for tampering the liberty server xml file through a command line approach.
+Voltron's goals are:
+- It stands for tampering the liberty server xml file through a command line approach.
+- It can monitor and manage registered resources from Liberty by using Java Management Extensions (JMX) managed beans (MBeans)
 
 ### Build and deploy in production
 #### Compile and bundle along with dependencies for later execution
@@ -9,6 +11,7 @@ Once the shadowJar has been succesfully compiled, please proceed to move it into
 mv ./glue/build/libs/voltron.jar $ANY_OTHER_PRODUCTION_PATH
 ```
 
+### JMX integration
 #### Liberty server configuration (defaultServer)
 We configure a secure JMX connection by enabling the Transport Security feature, which supports TLS connections for the rest connector. Additionally we set QuickStart security because is the simplest way to configure a user registry for testing purposes. (Below we can see how server.xml would look like)
 ```xml
