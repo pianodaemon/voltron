@@ -18,17 +18,10 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import java.io.IOException;
 
-class StatusApplicationHelper {
+class StatusApplicationHelper extends MBeanHelper {
 
-    private static final String CONNECTOR_TYPE_REST = "rest";
-    private static final String CONNECTOR_TEMPLATE_URL = "service:jmx:{0}://{1}:{2}/IBMJMXConnectorREST";
     private static final String APPLICATION_BEAN_NAME = "WebSphere:service=com.ibm.websphere.application.ApplicationMBean";
     private static final String APPLICATION_BEAN_PREFIX = "{0},name={1}";
-
-    public static String shapeServiceURL(final String hostName, final String port) {
-
-        return MessageFormat.format(CONNECTOR_TEMPLATE_URL, new Object[]{CONNECTOR_TYPE_REST, hostName, port});
-    }
 
     public static Map<String, String> inquiry(Supplier<String> urlSupplier, Map<String, ?> environment) throws Exception {
 
