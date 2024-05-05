@@ -15,7 +15,7 @@ public class LibertyConnREST {
     private final Integer mPort;
     private final HashMap<String, Object> environment;
 
-    public LibertyConnREST(String hostName, Integer port) throws Exception {
+    public LibertyConnREST(String hostName, Integer port) throws VoltronException {
         environment = new HashMap<>();
         mHostName = hostName;
         mPort = port;
@@ -26,7 +26,7 @@ public class LibertyConnREST {
         return MessageFormat.format(CONNECTOR_TEMPLATE_URL, new Object[]{CONNECTOR_TYPE_REST, hostName, port});
     }
 
-    private void setupCredentials() throws Exception {
+    private void setupCredentials() throws VoltronException {
         String credentialsProperty = System.getProperty("jmx.remote.credentials");
 
         if (credentialsProperty != null) {
@@ -34,20 +34,24 @@ public class LibertyConnREST {
             if (credentials.length == CRED_ELEMENT_NUMBER) {
                 environment.put(JMXConnector.CREDENTIALS, credentials);
             } else {
-                throw new Exception("Invalid jmx.remote.credentials format. Expected 'username,password'.");
+                throw new VoltronException("Invalid jmx.remote.credentials format. Expected 'username,password'.");
             }
         } else {
-            throw new Exception("jmx.remote.credentials property not set.");
+            throw new VoltronException("jmx.remote.credentials property not set.");
         }
     }
 
-    private void setupEnvForLiberty() throws Exception {
+    private void setupEnvForLiberty() throws VoltronException {
         environment.put("com.ibm.ws.jmx.connector.client.disableURLHostnameVerification", Boolean.TRUE);
         environment.put("jmx.remote.protocol.provider.pkgs", "com.ibm.ws.jmx.connector.client");
         setupCredentials();
     }
 
-    public Map<String, String> inquiryApplicationStatus() throws Exception {
-        return StatusApplicationHelper.inquiry(() -> shapeServiceURL(mHostName, mPort.toString()), environment);
+    public Map<String, String> inquiryApplicationStatus() throws VoltronException {
+        try {
+            return StatusApplicationHelper.inquiry(() -> shapeServiceURL(mHostName, mPort.toString()), environment);
+        } catch (Exception ex) {
+            throw new VoltronException(ex);
+        }
     }
 }
