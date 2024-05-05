@@ -23,7 +23,7 @@ final class StatusApplicationHelper extends MBeanHelper {
     private static final String APPLICATION_BEAN_NAME = "WebSphere:service=com.ibm.websphere.application.ApplicationMBean";
     private static final String APPLICATION_BEAN_PREFIX = "{0},name={1}";
 
-    public static Map<String, String> inquiry(Supplier<String> urlSupplier, Map<String, ?> environment) throws Exception {
+    public static Map<String, String> inquiryAll(Supplier<String> urlSupplier, Map<String, ?> environment) throws Exception {
 
         JMXServiceURL url = new JMXServiceURL(urlSupplier.get());
         try (JMXConnector jmxc = JMXConnectorFactory.connect(url, environment)) {

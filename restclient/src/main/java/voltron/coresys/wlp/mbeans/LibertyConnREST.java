@@ -53,9 +53,9 @@ public class LibertyConnREST {
         }
     }
 
-    public Map<String, String> inquiryApplicationStatus() throws RestClientException {
+    public Map<String, String> inquiryAllApplicationStatus() throws RestClientException {
         try {
-            return StatusApplicationHelper.inquiry(() -> shapeServiceURL(mHostName, mPort.toString()), environment);
+            return StatusApplicationHelper.inquiryAll(() -> shapeServiceURL(mHostName, mPort.toString()), environment);
         } catch (Exception ex) {
             throw new RestClientException(ex);
         }
