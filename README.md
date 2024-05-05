@@ -30,7 +30,7 @@ We configure a secure JMX connection by enabling the Transport Security feature,
 </server>
 ```
 
-#### Execution via jre (java runtime)
+#### Private Key and Self-Signed Certificate with OpenSSL (KeyStore in Liberty)
 We can use OpenSSL to create key pairs and certificates, which can then be imported into a Java KeyStore (JKS). This approach allows you to work with certificates and keys in a way that is familiar to many developers and administrators.
 ```sh
 pianodaemon@LAPTOP-4RSVIK4C:~/voltron$ ./genks.sh
