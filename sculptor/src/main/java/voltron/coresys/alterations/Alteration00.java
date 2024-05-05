@@ -4,7 +4,7 @@ import com.immortalcrab.voltron.portage.ComIbmWsAppManagement;
 import com.immortalcrab.voltron.portage.ObjectFactory;
 import com.immortalcrab.voltron.portage.ServerType;
 import javax.xml.bind.JAXBElement;
-import voltron.coresys.VoltronException;
+import voltron.coresys.SculptorException;
 import voltron.coresys.tampering.XmlFormater;
 
 public class Alteration00 extends XmlFormater {
@@ -12,14 +12,14 @@ public class Alteration00 extends XmlFormater {
     private final String description;
     private final boolean autoExpand;
 
-    public Alteration00(String xmlFilePath, String desc, boolean expand) throws VoltronException {
+    public Alteration00(String xmlFilePath, String desc, boolean expand) throws SculptorException {
         super(xmlFilePath);
         description = desc;
         autoExpand = expand;
     }
 
     @Override
-    public JAXBElement<ServerType> tailorHandler() throws VoltronException {
+    public JAXBElement<ServerType> tailorHandler() throws SculptorException {
         ServerType st = getServer().getValue();
         st.setDescription(description);
         for (Object element : st.getIncludeOrVariableOrWebApplication()) {
