@@ -1,12 +1,6 @@
 ## Voltron (Ready To Form Voltron)
 Voltron stands for tampering the liberty server xml file through a command line approach.
 
-### Build and run for debugging purposes
-#### Compile and run along with needed arguments
-```sh
-./gradlew run --args=[any application arguments]
-```
-
 ### Build and deploy in production
 #### Compile and bundle along with dependencies for later execution
 Once the shadowJar has been succesfully compiled, please proceed to move it into your production's path
@@ -25,11 +19,13 @@ java -jar  ./voltron.jar [any application arguments]
 #### Execution via bourne shell script
 System administrators can also wrap the execution through a shell script featuring the following content
 ```sh
-cat voltron.sh
+pianodaemon@LAPTOP-4RSVIK4C:~/voltron$ cat voltron.sh
 #!/bin/sh
 
-VOLTRON_PATH="."  # XXX: Set this up to any convenient path of yours
-WLP_HOME=~/wlp
+VOLTRON_PATH="./glue/build/libs/"  # XXX: Set this up to any convenient path of yours
+WLP_HOME=~/wlp                     # XXX: Set this up to any convenient path of yours
+JMX_REMOTE_USER_ID="admin"
+JMX_REMOTE_USER_PASS="1234qwer"
 KEY_STORE_PASSWORD="1234qwer"
 ALGO_KEY=PKCS12
 
@@ -38,11 +34,12 @@ MAIN_CMD="java \
   -Djavax.net.ssl.trustStore="${WLP_HOME}/usr/servers/defaultServer/resources/security/key.p12" \
   -Djavax.net.ssl.trustStorePassword=${KEY_STORE_PASSWORD} \
   -Djavax.net.ssl.trustStoreType=$ALGO_KEY \
-  -Djmx.remote.credentials=admin,1234qwer \
+  -Djmx.remote.credentials=${JMX_REMOTE_USER_ID},${JMX_REMOTE_USER_PASS} \
   voltron.cli.Main"
 
 $MAIN_CMD $@
 ```
+> Note: Whenever Java attempts to connect to another application over `SSL` (e.g.: HTTPS, IMAPS, LDAPS), it will only be able to connect to applications it can trust.  The way trust is handled in Java is that you have a `truststore`
 
 Make the script executable
 ```sh
