@@ -9,8 +9,29 @@ Once the shadowJar has been succesfully compiled, please proceed to move it into
 mv ./glue/build/libs/voltron.jar $YOUR_PRODUCTION_PATH
 ```
 
+#### Liberty server configuration (defaultServer)
+We configure a secure JMX connection by enabling the Transport Security feature, which supports TLS connections for the rest connector. Additionally we set QuickStart security because is the simplest way to configure a user registry for testing purposes. (Below we can see how server.xml would look like)
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<server>
+    <featureManager>
+        <feature>javaee-8.0</feature>
+        <feature>restConnector-2.0</feature>
+        <feature>transportSecurity-1.0</feature>
+    </featureManager>
+    <httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="9080" httpsPort="9443"/>
+    <applicationManager autoExpand="true"/>
+    <keyStore id="defaultKeyStore" password="1234qwer" location="resources/security/key.p12"/>
+    <quickStartSecurity userName="admin" userPassword="1234qwer"/>
+    <enterpriseApplication id="guide-maven-multimodules-ear" location="guide-maven-multimodules-ear.ear" name="guide-maven-multimodules-ear"/>
+    <webApplication id="app00" location="simplistic-1.0-OMEGA.war" name="app00" contextRoot="pocland00"/>
+    <webApplication id="app01" location="simplistic-1.0-OMEGA.war" name="app01" contextRoot="pocland01"/>
+    <webApplication id="app02" location="simplistic-1.0-OMEGA.war" name="app02" contextRoot="pocland02"/>
+</server>
+```
+
 #### Execution via jre (java runtime)
-Within production path proceed to execute via the java runtime.
+We can use OpenSSL to create key pairs and certificates, which can then be imported into a Java KeyStore (JKS). This approach allows you to work with certificates and keys in a way that is familiar to many developers and administrators.
 ```sh
 pianodaemon@LAPTOP-4RSVIK4C:~/voltron$ ./genks.sh
 Generating RSA private key, 2048 bit long modulus (2 primes)
@@ -49,7 +70,7 @@ total 20K
 4.0K -rw------- 1 pianodaemon pianodaemon 1.7K May  5 11:00 private.key
 4.0K -rw-r--r-- 1 pianodaemon pianodaemon 1.5K May  5 11:00 selfsigned.crt
 ```
-> Note: the `java runtime` is distributed by oracle without sdk.
+> Note: Please do not forget to `move` these keys into $WLP_HOME/usr/servers/defaultServer/server.xml
 
 #### Execution via bourne shell script
 System administrators can also wrap the execution through a shell script featuring the following content
