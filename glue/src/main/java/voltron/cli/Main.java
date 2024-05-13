@@ -1,54 +1,41 @@
 package voltron.cli;
 
-import voltron.coresys.SculptorException;
-import voltron.coresys.RestClientException;
-import voltron.coresys.tampering.XmlFormater;
-import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import java.util.Map;
-import voltron.coresys.alterations.Alteration00;
-import voltron.coresys.wlp.mbeans.LibertyConnREST;
+import org.apache.commons.cli.OptionGroup;
+import voltron.coresys.SculptorException;
+import voltron.coresys.RestClientException;
+import voltron.cli.helpers.DemoParsingHelper;
+import voltron.cli.helpers.QueueParsingHelper;
 
 public class Main {
 
     public static void main(String[] args) {
         try {
-            takeInputFromCli(args);
+            if (args.length == 0) {
+                System.err.println("No arguments provided.");
+                System.exit(1);
+            } else {
+                takeInputFromCli(args);
+            }
         } catch (SculptorException | RestClientException ex) {
-            ex.printStackTrace();
+            System.err.println(ex.getMessage());
+            System.exit(1);
         }
     }
 
     private static void takeInputFromCli(String[] args) throws SculptorException, RestClientException {
-        Options options = new Options()
-                .addOption(Option.builder("d")
-                        .longOpt("description")
-                        .required(true)
-                        .hasArg(true)
-                        .desc("This is a demo option upon cli")
-                        .build());
-
         CommandLineParser parser = new DefaultParser();
-        CommandLine cmdLine;
-        String desc;
-        try {
-            cmdLine = parser.parse(options, args);
-            desc = cmdLine.getOptionValue('d');
-        } catch (ParseException ex) {
-            final String emsg = "Parser cli went mad";
-            throw new SculptorException(emsg, ex);
-        }
+        OptionGroup subCmdGroup = new OptionGroup();
+        subCmdGroup
+                .addOption(DemoParsingHelper.OPTION_SUB_CMD)
+                .addOption(QueueParsingHelper.OPTION_SUB_CMD);
 
+        Options options = new Options();
+        options.addOptionGroup(subCmdGroup);
 
-        XmlFormater xmlFormater;
-        xmlFormater = new Alteration00("server_original.xml", desc, false);
-        xmlFormater.renderFeaturingSave("server.xml");
-        LibertyConnREST lc = new LibertyConnREST("127.0.0.1", 9443);
-        Map<String, String> m = lc.inquiryAllApplicationStatus();
-        m.forEach((key, value) -> System.out.println(key + "->" + value));
+        DemoParsingHelper.tie(args, parser, options);
+        QueueParsingHelper.tie(args, parser, options);
     }
 }
