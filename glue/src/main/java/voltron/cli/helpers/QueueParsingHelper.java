@@ -33,17 +33,15 @@ final public class QueueParsingHelper {
         QueueParsingHelper qpHelper = new QueueParsingHelper(parser, options);
         qpHelper.doParsing(args, (cmdLine) -> {
             if (cmdLine.hasOption('q')) {
-                handleQueueSubCmd(cmdLine);
+                if (!(cmdLine.getArgs().length > 0)) {
+                    throw new SculptorException("No arguments for the respective action were provided");
+                }
+                handleQueueSubCmd(cmdLine.getOptionValue('q'), cmdLine.getArgs()[ACTION_ARG_IDX]);
             }
         });
     }
 
-    private static void handleQueueSubCmd(CommandLine cmdLine) throws SculptorException {
-        final String action = cmdLine.getOptionValue('q');
-        if (!(cmdLine.getArgs().length > 0)) {
-            throw new SculptorException("No arguments for the respective action were provided");
-        }
-        final String queueName = cmdLine.getArgs()[ACTION_ARG_IDX];
+    private static void handleQueueSubCmd(final String action, final String queueName) throws SculptorException {
         if (action.equals("new")) {
             System.out.println("This is the newer queue:" + queueName);
         } else {
