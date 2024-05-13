@@ -15,8 +15,8 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            if (args.length == 0) {
-                System.err.println("No arguments provided.");
+            if (args.length == 0 || !args[0].startsWith("-")) {
+                System.err.println("No subcommand provided.");
                 System.exit(EXIT_FAILURE);
             }
             takeInputFromCli(args);
