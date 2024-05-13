@@ -11,17 +11,18 @@ import voltron.cli.helpers.QueueParsingHelper;
 
 public class Main {
 
+    public static final int EXIT_FAILURE = 1;
+
     public static void main(String[] args) {
         try {
             if (args.length == 0) {
                 System.err.println("No arguments provided.");
-                System.exit(1);
-            } else {
-                takeInputFromCli(args);
+                System.exit(EXIT_FAILURE);
             }
+            takeInputFromCli(args);
         } catch (SculptorException | RestClientException ex) {
             System.err.println(ex.getMessage());
-            System.exit(1);
+            System.exit(EXIT_FAILURE);
         }
     }
 
