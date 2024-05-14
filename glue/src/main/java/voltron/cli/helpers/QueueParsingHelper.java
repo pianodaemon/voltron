@@ -1,5 +1,6 @@
 package voltron.cli.helpers;
 
+import java.util.Optional;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -10,6 +11,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
+import voltron.coresys.alterations.AlterationQueue;
+import voltron.coresys.tampering.XmlFormater;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter(AccessLevel.PRIVATE)
@@ -42,8 +45,16 @@ final public class QueueParsingHelper {
     }
 
     private static void handleQueueSubCmd(final String action, final String queueName) throws SculptorException {
+        Optional<String> srvOriginal = Optional.ofNullable(System.getenv("SERVER_ORIGINAL"));
+        Optional<String> srvMadeUp = Optional.ofNullable(System.getenv("SERVER_MADE_UP"));
+        if (srvOriginal.isEmpty() || srvMadeUp.isEmpty()) {
+            throw new SculptorException("Original and Made up server files has not been set");
+        }
         if (action.equals("new")) {
             System.out.println("This is the newer queue:" + queueName);
+            XmlFormater xmlFormater;
+            xmlFormater = new AlterationQueue(srvOriginal.get(), queueName);
+            xmlFormater.renderFeaturingSave(srvMadeUp.get());
         } else {
             throw new SculptorException("Such action has not been supported yet");
         }
