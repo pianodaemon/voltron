@@ -22,7 +22,7 @@ public class DemoParsingHelper {
             .desc("This is a demo option upon cli")
             .build();
 
-    public static void tie(String[] args, CommandLineParser parser, Options options) throws SculptorException, RestClientException {
+    public static void tie(String[] args, CommandLineParser parser, Options options) throws SculptorException, RestClientException, Exception {
         CommandLine cmdLine;
         String desc;
         try {
@@ -34,9 +34,7 @@ public class DemoParsingHelper {
         } catch (ParseException ex) {
             throw new SculptorException(ex);
         }
-        if (GlobalConfig.getInstance().getSrvOriginal().isEmpty() || GlobalConfig.getInstance().getSrvMadeUp().isEmpty()) {
-            throw new SculptorException("Original and Made up server files has not been set");
-        }
+
         System.out.println("xxx: " + desc);
         XmlFormater xmlFormater;
         xmlFormater = new Alteration00(GlobalConfig.getInstance().getSrvOriginal().get(), desc, false);
