@@ -1,4 +1,4 @@
-  package voltron.coresys.alterations;
+package voltron.coresys.alterations;
 
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsMessagingRuntime;
