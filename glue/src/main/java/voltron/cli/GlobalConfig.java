@@ -12,11 +12,11 @@ public class GlobalConfig {
     }
 
     public static GlobalConfig getInstance() throws Exception {
-        if (GlobalConfigHolder.INSTANCE.getSrvOriginal().isEmpty() || GlobalConfigHolder.INSTANCE.getSrvMadeUp().isEmpty()) {
+        if (Optional.ofNullable(GlobalConfigHolder.INSTANCE.getSrvOriginal()).isEmpty() || Optional.ofNullable(GlobalConfigHolder.INSTANCE.getSrvMadeUp()).isEmpty()) {
             throw new Exception("Original and Made up server files has not been set");
         }
         return GlobalConfigHolder.INSTANCE;
     }
-    private final Optional<String> srvOriginal = Optional.ofNullable(System.getenv("SERVER_ORIGINAL"));
-    private final Optional<String> srvMadeUp = Optional.ofNullable(System.getenv("SERVER_MADE_UP"));
+    private final String srvOriginal = System.getenv("SERVER_ORIGINAL");
+    private final String srvMadeUp = System.getenv("SERVER_MADE_UP");
 }
