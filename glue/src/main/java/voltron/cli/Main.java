@@ -20,13 +20,13 @@ public class Main {
                 System.exit(EXIT_FAILURE);
             }
             takeInputFromCli(args);
-        } catch (SculptorException | RestClientException ex) {
+        } catch (Exception ex) {
             System.err.println(ex.getMessage());
             System.exit(EXIT_FAILURE);
         }
     }
 
-    private static void takeInputFromCli(String[] args) throws SculptorException, RestClientException {
+    private static void takeInputFromCli(String[] args) throws SculptorException, RestClientException, Exception {
         CommandLineParser parser = new DefaultParser();
         OptionGroup subCmdGroup = new OptionGroup();
         subCmdGroup
