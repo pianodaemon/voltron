@@ -1,5 +1,8 @@
 package voltron.coresys.alterations;
 
+import com.immortalcrab.voltron.portage.ComIbmWsJcaActivationSpec;
+import com.immortalcrab.voltron.portage.ComIbmWsJcaActivationSpecFactory;
+import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsMessagingRuntime;
 import com.immortalcrab.voltron.portage.ComIbmWsSibQueueFactory;
 import com.immortalcrab.voltron.portage.ObjectFactory;
@@ -27,11 +30,12 @@ public class AlterationQueue extends XmlFormater {
             throw new SculptorException("Queue is already present");
         }
         addQueueIntoRuntime(messagingRuntime, sqf);
+        ComIbmWsJcaJmsActivationSpecFactory aspec = obtainQueueActivationSpec(st);
         return getServer();
     }
 
     private ComIbmWsMessagingRuntime obtainRuntime(ServerType st) {
-        Optional<ComIbmWsMessagingRuntime> messagingRuntime = Optional.ofNullable(findMessagingRuntime(st));
+        Optional<ComIbmWsMessagingRuntime> messagingRuntime = Optional.ofNullable(findIncludeOrVariableOrWebApplication(st));
         if (messagingRuntime.isPresent()) {
             return messagingRuntime.get();
         }
@@ -59,12 +63,19 @@ public class AlterationQueue extends XmlFormater {
         messagingRuntime.getFileStoreOrQueueOrTopicSpace().add(sqf);
     }
 
-    private ComIbmWsMessagingRuntime findMessagingRuntime(ServerType st) {
+    private static <T> T findIncludeOrVariableOrWebApplication(ServerType st) {
         for (Object element : st.getIncludeOrVariableOrWebApplication()) {
             if (element instanceof ComIbmWsMessagingRuntime) {
-                return (ComIbmWsMessagingRuntime) element;
+                return (T) element;
             }
         }
         return null;
+    }
+
+    private ComIbmWsJcaJmsActivationSpecFactory obtainQueueActivationSpec(ServerType st) {
+        ComIbmWsJcaJmsActivationSpecFactory aspec = new ObjectFactory().createComIbmWsJcaJmsActivationSpecFactory();
+        aspec.setId(mName + "_" + "Act_Spec");
+        st.getIncludeOrVariableOrWebApplication().add(aspec);
+        return aspec;
     }
 }
