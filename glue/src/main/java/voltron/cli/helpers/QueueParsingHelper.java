@@ -4,7 +4,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.ParseException;
 import voltron.coresys.SculptorException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,7 +31,7 @@ final public class QueueParsingHelper {
     private @NonNull
     Options stemOptions;
 
-    public static void tie(String[] args, CommandLineParser parser, Options options) throws SculptorException {
+    public static void tie(String[] args, CommandLineParser parser, Options options) throws Exception, SculptorException {
         QueueParsingHelper qpHelper = new QueueParsingHelper(parser, options);
         qpHelper.doParsing(args, (cmdLine) -> {
             if (cmdLine.hasOption('q')) {
@@ -44,10 +43,8 @@ final public class QueueParsingHelper {
         });
     }
 
-    private static void handleQueueSubCmd(final String action, final String queueName) throws SculptorException {
-        if (GlobalConfig.getInstance().getSrvOriginal().isEmpty() || GlobalConfig.getInstance().getSrvMadeUp().isEmpty()) {
-            throw new SculptorException("Original and Made up server files has not been set");
-        }
+    private static void handleQueueSubCmd(final String action, final String queueName) throws Exception, SculptorException {
+
         if (action.equals("new")) {
             System.out.println("This is the newer queue:" + queueName);
             XmlFormater xmlFormater;
@@ -58,17 +55,13 @@ final public class QueueParsingHelper {
         }
     }
 
-    private void doParsing(String[] args, SubCmdHandler sch) throws SculptorException {
-        try {
-            sch.bind(getCliParser().parse(getStemOptions(), args));
-        } catch (ParseException ex) {
-            throw new SculptorException(ex);
-        }
+    private void doParsing(String[] args, SubCmdHandler sch) throws Exception {
+        sch.bind(getCliParser().parse(getStemOptions(), args));
     }
 
     @FunctionalInterface
     private interface SubCmdHandler {
 
-        public void bind(CommandLine cmdLine) throws SculptorException;
+        public void bind(CommandLine cmdLine) throws Exception;
     }
 }
