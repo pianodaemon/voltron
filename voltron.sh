@@ -6,6 +6,8 @@ JMX_REMOTE_USER_ID="admin"
 JMX_REMOTE_USER_PASS="1234qwer"
 KEY_STORE_PASSWORD="1234qwer"
 ALGO_KEY=PKCS12
+export SERVER_ORIGINAL="./server_original.xml"
+export SERVER_MADE_UP="./server.xml"
 
 MAIN_CMD="java \
   -Djava.class.path="${VOLTRON_PATH}/voltron.jar:${WLP_HOME}/clients/restConnector.jar" \
