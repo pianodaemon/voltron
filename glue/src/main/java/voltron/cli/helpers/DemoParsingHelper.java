@@ -1,12 +1,12 @@
 package voltron.cli.helpers;
 
 import java.util.Map;
-import java.util.Optional;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import voltron.cli.GlobalConfig;
 import voltron.coresys.RestClientException;
 import voltron.coresys.SculptorException;
 import voltron.coresys.alterations.Alteration00;
@@ -34,15 +34,13 @@ public class DemoParsingHelper {
         } catch (ParseException ex) {
             throw new SculptorException(ex);
         }
-        Optional<String> srvOriginal = Optional.ofNullable(System.getenv("SERVER_ORIGINAL"));
-        Optional<String> srvMadeUp = Optional.ofNullable(System.getenv("SERVER_MADE_UP"));
-        if (srvOriginal.isEmpty() || srvMadeUp.isEmpty()) {
+        if (GlobalConfig.getInstance().getSrvOriginal().isEmpty() || GlobalConfig.getInstance().getSrvMadeUp().isEmpty()) {
             throw new SculptorException("Original and Made up server files has not been set");
         }
         System.out.println("xxx: " + desc);
         XmlFormater xmlFormater;
-        xmlFormater = new Alteration00(srvOriginal.get(), desc, false);
-        xmlFormater.renderFeaturingSave(srvMadeUp.get());
+        xmlFormater = new Alteration00(GlobalConfig.getInstance().getSrvOriginal().get(), desc, false);
+        xmlFormater.renderFeaturingSave(GlobalConfig.getInstance().getSrvMadeUp().get());
         LibertyConnREST lc = new LibertyConnREST("127.0.0.1", 9443);
         Map<String, String> m = lc.inquiryAllApplicationStatus();
         m.forEach((key, value) -> System.out.println(key + "->" + value));
