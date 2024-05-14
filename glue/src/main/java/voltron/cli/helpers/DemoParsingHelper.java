@@ -37,8 +37,8 @@ public class DemoParsingHelper {
 
         System.out.println("xxx: " + desc);
         XmlFormater xmlFormater;
-        xmlFormater = new Alteration00(GlobalConfig.getInstance().getSrvOriginal().get(), desc, false);
-        xmlFormater.renderFeaturingSave(GlobalConfig.getInstance().getSrvMadeUp().get());
+        xmlFormater = new Alteration00(GlobalConfig.getInstance().getSrvOriginal(), desc, false);
+        xmlFormater.renderFeaturingSave(GlobalConfig.getInstance().getSrvMadeUp());
         LibertyConnREST lc = new LibertyConnREST("127.0.0.1", 9443);
         Map<String, String> m = lc.inquiryAllApplicationStatus();
         m.forEach((key, value) -> System.out.println(key + "->" + value));
