@@ -48,8 +48,8 @@ final public class QueueParsingHelper {
         if (action.equals("new")) {
             System.out.println("This is the newer queue:" + queueName);
             XmlFormater xmlFormater;
-            xmlFormater = new AlterationQueue(GlobalConfig.getInstance().getSrvOriginal().get(), queueName);
-            xmlFormater.renderFeaturingSave(GlobalConfig.getInstance().getSrvMadeUp().get());
+            xmlFormater = new AlterationQueue(GlobalConfig.getInstance().getSrvOriginal(), queueName);
+            xmlFormater.renderFeaturingSave(GlobalConfig.getInstance().getSrvMadeUp());
         } else {
             throw new SculptorException("Such action has not been supported yet");
         }
