@@ -1,4 +1,4 @@
-package voltron.coresys.alterations;
+  package voltron.coresys.alterations;
 
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsMessagingRuntime;
@@ -62,8 +62,9 @@ public class AlterationQueue extends XmlFormater {
     }
 
     private static <T> T findIncludeOrVariableOrWebApplication(ServerType st) {
+        Class type = ((T) new Object()).getClass();
         for (Object element : st.getIncludeOrVariableOrWebApplication()) {
-            if (element instanceof ComIbmWsMessagingRuntime) {
+            if (type.getClass() == element.getClass()) {
                 return (T) element;
             }
         }
