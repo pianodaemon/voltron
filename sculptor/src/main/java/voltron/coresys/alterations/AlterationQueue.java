@@ -1,6 +1,7 @@
 package voltron.coresys.alterations;
 
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
+import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener;
 import com.immortalcrab.voltron.portage.ComIbmWsMessagingRuntime;
 import com.immortalcrab.voltron.portage.ComIbmWsSibQueueFactory;
 import com.immortalcrab.voltron.portage.ObjectFactory;
@@ -11,6 +12,9 @@ import voltron.coresys.SculptorException;
 import voltron.coresys.tampering.XmlFormater;
 
 public class AlterationQueue extends XmlFormater {
+
+    private static final String ACT_SPEC_POSTFIX = "Act_Spec";
+    private static final String ACT_SPEC_DEST_TYPE = "javax.jms.Queue";
 
     private final String mName;
 
@@ -33,7 +37,7 @@ public class AlterationQueue extends XmlFormater {
     }
 
     private ComIbmWsMessagingRuntime obtainRuntime(ServerType st) {
-        Optional<ComIbmWsMessagingRuntime> messagingRuntime = Optional.ofNullable(findIncludeOrVariableOrWebApplication(st));
+        Optional<ComIbmWsMessagingRuntime> messagingRuntime = Optional.ofNullable(findMessagingRuntime(st));
         if (messagingRuntime.isPresent()) {
             return messagingRuntime.get();
         }
@@ -61,19 +65,23 @@ public class AlterationQueue extends XmlFormater {
         messagingRuntime.getFileStoreOrQueueOrTopicSpace().add(sqf);
     }
 
-    private static <T> T findIncludeOrVariableOrWebApplication(ServerType st) {
-        Class type = ((T) new Object()).getClass();
+    private static ComIbmWsMessagingRuntime findMessagingRuntime(ServerType st) {
         for (Object element : st.getIncludeOrVariableOrWebApplication()) {
-            if (type.getClass() == element.getClass()) {
-                return (T) element;
+            if (element instanceof ComIbmWsMessagingRuntime) {
+                return (ComIbmWsMessagingRuntime) element;
             }
         }
         return null;
     }
 
     private ComIbmWsJcaJmsActivationSpecFactory obtainQueueActivationSpec(ServerType st) {
+        ComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener propertyWasJms = new ObjectFactory()
+                .createComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener();
+        propertyWasJms.setDestinationType(ACT_SPEC_DEST_TYPE);
+        propertyWasJms.setDestinationRef(mName);
         ComIbmWsJcaJmsActivationSpecFactory aspec = new ObjectFactory().createComIbmWsJcaJmsActivationSpecFactory();
-        aspec.setId(mName + "_" + "Act_Spec");
+        aspec.setId(mName + "_" + ACT_SPEC_POSTFIX);
+        aspec.getAuthDataOrPropertiesWasJms().add(propertyWasJms);
         st.getIncludeOrVariableOrWebApplication().add(aspec);
         return aspec;
     }
