@@ -4,6 +4,7 @@ import com.immortalcrab.voltron.portage.ComIbmWsJcaConnectionManagerFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueueConnectionFactoryFactory;
+import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueueFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl;
 import com.immortalcrab.voltron.portage.ComIbmWsKernelFeature;
@@ -14,9 +15,11 @@ import com.immortalcrab.voltron.portage.ServerType;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 import voltron.coresys.SculptorException;
 import voltron.coresys.tampering.XmlFormater;
 
@@ -28,9 +31,9 @@ public class Point2PointEnabler extends XmlFormater {
     private static final String ACT_SPEC_DEST_TYPE = "javax.jms.Queue";
     private static final String QUEUE_SESSION_JNDI_TPL = JMS_PREFIX + "/{0}";
     private static final String ACT_SPEC_ID_TPL = JMS_PREFIX + "/{0}_{1}";
-    private static final String DEFAULT_CONN_MGR_ID = "Default_ConnMgr";
+    private static final String DEFAULT_CONN_MGR_ID = "DEFAULT_CONN_MGR";
     private static final String DEFAULT_CONN_MGR_MAX_POOL_SIZE = "2";
-    private static final String DEFAULT_CONN_JNDI_TPL = JMS_PREFIX + "/Default_QCF";
+    private static final String DEFAULT_CONN_JNDI_TPL = JMS_PREFIX + "/DEFAULT_QCF";
 
     private final String mName;
 
@@ -65,6 +68,14 @@ public class Point2PointEnabler extends XmlFormater {
         ComIbmWsJcaJmsQueueConnectionFactoryFactory cff = new ObjectFactory().createComIbmWsJcaJmsQueueConnectionFactoryFactory();
         cff.setJndiName(DEFAULT_CONN_JNDI_TPL);
         cff.setConnectionManagerRef(DEFAULT_CONN_MGR_ID);
+                ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory propertyWasJms = new ObjectFactory()
+                .createComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory ();
+        propertyWasJms.setNonPersistentMapping("ExpressNonPersistent");
+        propertyWasJms.setPersistentMapping("ReliablePersistent");
+        JAXBElement<ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory> xxx = new JAXBElement<ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory>(new QName("properties.wasJms"),
+                                           ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory.class, propertyWasJms);
+        cff.getConnectionManagerOrContainerAuthDataOrJaasLoginContextEntry().add(xxx);
+        List<JAXBElement<?>> d = cff.getConnectionManagerOrContainerAuthDataOrJaasLoginContextEntry();
         st.getIncludeOrVariableOrWebApplication().add(cff);
     }
 
