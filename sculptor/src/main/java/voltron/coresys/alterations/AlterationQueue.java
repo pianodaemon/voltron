@@ -54,10 +54,11 @@ public class AlterationQueue extends XmlFormater {
         Optional<ComIbmWsKernelFeature> messagingRuntime = Optional.ofNullable(findKernelFeature(st));
         if (messagingRuntime.isPresent()) {
             HashSet<String> availableOnes = new HashSet<>(messagingRuntime.get().getFeature());
-            if (!availableOnes.containsAll(FEATURES_EXPECTED)) {
-                throw new SculptorException("Missing one or more server features");
+            if (availableOnes.containsAll(FEATURES_EXPECTED)) {
+                return;
             }
         }
+        throw new SculptorException("Missing one or more server features");
     }
 
     private static ComIbmWsKernelFeature findKernelFeature(ServerType st) {
