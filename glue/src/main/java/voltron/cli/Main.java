@@ -7,7 +7,7 @@ import org.apache.commons.cli.OptionGroup;
 import voltron.coresys.SculptorException;
 import voltron.coresys.RestClientException;
 import voltron.cli.helpers.DemoParsingHelper;
-import voltron.cli.helpers.QueueParsingHelper;
+import voltron.cli.helpers.Point2PointParsingHelper;
 
 public class Main {
 
@@ -31,12 +31,12 @@ public class Main {
         OptionGroup subCmdGroup = new OptionGroup();
         subCmdGroup
                 .addOption(DemoParsingHelper.OPTION_SUB_CMD)
-                .addOption(QueueParsingHelper.OPTION_SUB_CMD);
+                .addOption(Point2PointParsingHelper.OPTION_SUB_CMD);
 
         Options options = new Options();
         options.addOptionGroup(subCmdGroup);
 
         DemoParsingHelper.tie(args, parser, options);
-        QueueParsingHelper.tie(args, parser, options);
+        Point2PointParsingHelper.tie(args, parser, options);
     }
 }
