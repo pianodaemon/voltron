@@ -124,6 +124,7 @@ public class AlterationQueue extends XmlFormater {
         ComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl propertyWasJms = new ObjectFactory()
                 .createComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl();
         propertyWasJms.setDeliveryMode("Application");
+        propertyWasJms.setQueueName(mName);
         ComIbmWsJcaJmsQueueFactory session = new ObjectFactory().createComIbmWsJcaJmsQueueFactory();
         session.setJndiName(MessageFormat.format(QUEUE_SESSION_JNDI_TPL, new Object[]{mName}));
         session.getPropertiesWasJms().add(propertyWasJms);
