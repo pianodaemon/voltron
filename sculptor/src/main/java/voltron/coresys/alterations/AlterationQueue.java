@@ -3,18 +3,23 @@ package voltron.coresys.alterations;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueueFactory;
+import com.immortalcrab.voltron.portage.ComIbmWsKernelFeature;
 import com.immortalcrab.voltron.portage.ComIbmWsMessagingRuntime;
 import com.immortalcrab.voltron.portage.ComIbmWsSibQueueFactory;
 import com.immortalcrab.voltron.portage.ObjectFactory;
 import com.immortalcrab.voltron.portage.ServerType;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import javax.xml.bind.JAXBElement;
 import voltron.coresys.SculptorException;
 import voltron.coresys.tampering.XmlFormater;
 
 public class AlterationQueue extends XmlFormater {
 
+    private static final Set<String> FEATURES_EXPECTED = new HashSet<>(Arrays.asList("wasJmsServer-1.0", "wasJmsClient-2.0", "jndi-1.0"));
     private static final String JMS_PREFIX = "jms";
     private static final String ACT_SPEC_POSTFIX = "Act_Spec";
     private static final String ACT_SPEC_DEST_TYPE = "javax.jms.Queue";
@@ -39,12 +44,32 @@ public class AlterationQueue extends XmlFormater {
      * https://www.ibm.com/docs/en/was-liberty/base?topic=server-configuring-point-point-messaging-single-liberty
      */
     private void configurePointToPoint(ServerType st) throws SculptorException {
+        verifyMandatoryFeatures(st);
         setupMessagingEngine(st);
         setupQueueSession(st);
         setupQueueActivationSpec(st);
     }
 
-    private ComIbmWsMessagingRuntime obtainRuntime(ServerType st) {
+    private static void verifyMandatoryFeatures(ServerType st) throws SculptorException {
+        Optional<ComIbmWsKernelFeature> messagingRuntime = Optional.ofNullable(findKernelFeature(st));
+        if (messagingRuntime.isPresent()) {
+            HashSet<String> availableOnes = new HashSet<>(messagingRuntime.get().getFeature());
+            if (!availableOnes.containsAll(FEATURES_EXPECTED)) {
+                throw new SculptorException("Missing one or more server features");
+            }
+        }
+    }
+
+    private static ComIbmWsKernelFeature findKernelFeature(ServerType st) {
+        for (Object element : st.getIncludeOrVariableOrWebApplication()) {
+            if (element instanceof ComIbmWsKernelFeature) {
+                return (ComIbmWsKernelFeature) element;
+            }
+        }
+        return null;
+    }
+
+    private static ComIbmWsMessagingRuntime obtainRuntime(ServerType st) {
         Optional<ComIbmWsMessagingRuntime> messagingRuntime = Optional.ofNullable(findMessagingRuntime(st));
         if (messagingRuntime.isPresent()) {
             return messagingRuntime.get();
@@ -60,7 +85,7 @@ public class AlterationQueue extends XmlFormater {
         return sqf;
     }
 
-    private boolean findQueueWithinRuntime(ComIbmWsMessagingRuntime messagingRuntime, ComIbmWsSibQueueFactory sqf) {
+    private static boolean findQueueWithinRuntime(ComIbmWsMessagingRuntime messagingRuntime, ComIbmWsSibQueueFactory sqf) {
         for (Object element : messagingRuntime.getFileStoreOrQueueOrTopicSpace()) {
             if (element instanceof ComIbmWsSibQueueFactory) {
                 return sqf.getId().equals(((ComIbmWsSibQueueFactory) element).getId());
@@ -69,7 +94,7 @@ public class AlterationQueue extends XmlFormater {
         return false;
     }
 
-    private void addQueueIntoRuntime(ComIbmWsMessagingRuntime messagingRuntime, ComIbmWsSibQueueFactory sqf) {
+    private static void addQueueIntoRuntime(ComIbmWsMessagingRuntime messagingRuntime, ComIbmWsSibQueueFactory sqf) {
         messagingRuntime.getFileStoreOrQueueOrTopicSpace().add(sqf);
     }
 
