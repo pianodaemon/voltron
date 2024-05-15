@@ -1,7 +1,9 @@
 package voltron.coresys.alterations;
 
+import com.immortalcrab.voltron.portage.ComIbmWsJcaConnectionManagerFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener;
+import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueueConnectionFactoryFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueueFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl;
 import com.immortalcrab.voltron.portage.ComIbmWsKernelFeature;
@@ -26,6 +28,9 @@ public class Point2PointEnabler extends XmlFormater {
     private static final String ACT_SPEC_DEST_TYPE = "javax.jms.Queue";
     private static final String QUEUE_SESSION_JNDI_TPL = JMS_PREFIX + "/{0}";
     private static final String ACT_SPEC_ID_TPL = JMS_PREFIX + "/{0}_{1}";
+    private static final String DEFAULT_CONN_MGR_ID = "Default_ConnMgr";
+    private static final String DEFAULT_CONN_MGR_MAX_POOL_SIZE = "2";
+    private static final String DEFAULT_CONN_JNDI_TPL = JMS_PREFIX + "/Default_QCF";
 
     private final String mName;
 
@@ -47,8 +52,20 @@ public class Point2PointEnabler extends XmlFormater {
     private void configurePointToPoint(ServerType st) throws SculptorException {
         verifyMandatoryFeatures(st);
         setupMessagingEngine(st);
+        setupConnManager(st);
         setupQueueSession(st);
         setupQueueActivationSpec(st);
+    }
+
+    private void setupConnManager(ServerType st) {
+        ComIbmWsJcaConnectionManagerFactory cmf = new ObjectFactory().createComIbmWsJcaConnectionManagerFactory();
+        cmf.setId(DEFAULT_CONN_MGR_ID);
+        cmf.setMaxPoolSize(DEFAULT_CONN_MGR_MAX_POOL_SIZE);
+        st.getIncludeOrVariableOrWebApplication().add(cmf);
+        ComIbmWsJcaJmsQueueConnectionFactoryFactory cff = new ObjectFactory().createComIbmWsJcaJmsQueueConnectionFactoryFactory();
+        cff.setJndiName(DEFAULT_CONN_JNDI_TPL);
+        cff.setConnectionManagerRef(DEFAULT_CONN_MGR_ID);
+        st.getIncludeOrVariableOrWebApplication().add(cff);
     }
 
     private static void verifyMandatoryFeatures(ServerType st) throws SculptorException {
