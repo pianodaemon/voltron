@@ -38,7 +38,7 @@ public class AlterationQueue extends XmlFormater {
         }
         addQueueIntoRuntime(messagingRuntime, sqf);
         setupQueueSession(st);
-        ComIbmWsJcaJmsActivationSpecFactory aspec = obtainQueueActivationSpec(st);
+        setupQueueActivationSpec(st);
         return getServer();
     }
 
@@ -80,7 +80,7 @@ public class AlterationQueue extends XmlFormater {
         return null;
     }
 
-    private ComIbmWsJcaJmsActivationSpecFactory obtainQueueActivationSpec(ServerType st) {
+    private void setupQueueActivationSpec(ServerType st) {
         ComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener propertyWasJms = new ObjectFactory()
                 .createComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener();
         propertyWasJms.setDestinationType(ACT_SPEC_DEST_TYPE);
@@ -89,7 +89,6 @@ public class AlterationQueue extends XmlFormater {
         aspec.setId(MessageFormat.format(ACT_SPEC_ID_TPL, new Object[]{mName, ACT_SPEC_POSTFIX}));
         aspec.getAuthDataOrPropertiesWasJms().add(propertyWasJms);
         st.getIncludeOrVariableOrWebApplication().add(aspec);
-        return aspec;
     }
 
     private void setupQueueSession(ServerType st) {
