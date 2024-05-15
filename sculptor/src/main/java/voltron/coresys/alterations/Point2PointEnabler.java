@@ -67,12 +67,12 @@ public class Point2PointEnabler extends XmlFormater {
         ComIbmWsJcaJmsQueueConnectionFactoryFactory cff = new ObjectFactory().createComIbmWsJcaJmsQueueConnectionFactoryFactory();
         cff.setJndiName(DEFAULT_CONN_JNDI_TPL);
         cff.setConnectionManagerRef(DEFAULT_CONN_MGR_ID);
-                ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory propertyWasJms = new ObjectFactory()
-                .createComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory ();
+        ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory propertyWasJms = new ObjectFactory()
+                .createComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory();
         propertyWasJms.setNonPersistentMapping("ExpressNonPersistent");
         propertyWasJms.setPersistentMapping("ReliablePersistent");
         JAXBElement<ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory> jbPropertyWasJms = new JAXBElement<ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory>(new QName("properties.wasJms"),
-                                           ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory.class, propertyWasJms);
+                ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory.class, propertyWasJms);
         cff.getConnectionManagerOrContainerAuthDataOrJaasLoginContextEntry().add(jbPropertyWasJms);
         st.getIncludeOrVariableOrWebApplication().add(cff);
     }
@@ -110,6 +110,8 @@ public class Point2PointEnabler extends XmlFormater {
     private ComIbmWsSibQueueFactory makeQueue() {
         ComIbmWsSibQueueFactory sqf = new ObjectFactory().createComIbmWsSibQueueFactory();
         sqf.setId(mName);
+        sqf.setForceReliability("ReliablePersistent");
+        sqf.setMaxMessageDepth("5000");
         return sqf;
     }
 
@@ -150,6 +152,9 @@ public class Point2PointEnabler extends XmlFormater {
         ComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl propertyWasJms = new ObjectFactory()
                 .createComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl();
         propertyWasJms.setDeliveryMode("Application");
+        propertyWasJms.setTimeToLive("500000");
+        propertyWasJms.setPriority("1");
+        propertyWasJms.setReadAhead("AsConnection");
         propertyWasJms.setQueueName(mName);
         ComIbmWsJcaJmsQueueFactory session = new ObjectFactory().createComIbmWsJcaJmsQueueFactory();
         session.setJndiName(MessageFormat.format(QUEUE_SESSION_JNDI_TPL, new Object[]{mName}));
