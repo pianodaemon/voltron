@@ -2,6 +2,7 @@ package voltron.coresys.alterations;
 
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener;
+import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueueFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsMessagingRuntime;
 import com.immortalcrab.voltron.portage.ComIbmWsSibQueueFactory;
 import com.immortalcrab.voltron.portage.ObjectFactory;
@@ -14,9 +15,11 @@ import voltron.coresys.tampering.XmlFormater;
 
 public class AlterationQueue extends XmlFormater {
 
+    private static final String JMS_PREFIX = "jms";
     private static final String ACT_SPEC_POSTFIX = "Act_Spec";
     private static final String ACT_SPEC_DEST_TYPE = "javax.jms.Queue";
-    private static final String ACT_SPEC_ID_TPL = "jms/{0}_{1}";
+    private static final String QUEUE_SESSION_JNDI_TPL = JMS_PREFIX + "/{0}";
+    private static final String ACT_SPEC_ID_TPL = JMS_PREFIX + "/{0}_{1}";
 
     private final String mName;
 
@@ -34,6 +37,7 @@ public class AlterationQueue extends XmlFormater {
             throw new SculptorException("Queue is already present");
         }
         addQueueIntoRuntime(messagingRuntime, sqf);
+        setupQueueSession(st);
         ComIbmWsJcaJmsActivationSpecFactory aspec = obtainQueueActivationSpec(st);
         return getServer();
     }
@@ -86,5 +90,12 @@ public class AlterationQueue extends XmlFormater {
         aspec.getAuthDataOrPropertiesWasJms().add(propertyWasJms);
         st.getIncludeOrVariableOrWebApplication().add(aspec);
         return aspec;
+    }
+
+    private void setupQueueSession(ServerType st) {
+        // Declare a queue resource to create a Producer/Consumer session to the queue
+        ComIbmWsJcaJmsQueueFactory session = new ObjectFactory().createComIbmWsJcaJmsQueueFactory();
+        session.setJndiName(MessageFormat.format(QUEUE_SESSION_JNDI_TPL, new Object[]{mName}));
+        st.getIncludeOrVariableOrWebApplication().add(session);
     }
 }
