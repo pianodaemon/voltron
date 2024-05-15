@@ -3,6 +3,7 @@ package voltron.coresys.alterations;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecFactory;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsActivationSpecPropertiesWasJmsJavaxJmsMessageListener;
 import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueueFactory;
+import com.immortalcrab.voltron.portage.ComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl;
 import com.immortalcrab.voltron.portage.ComIbmWsKernelFeature;
 import com.immortalcrab.voltron.portage.ComIbmWsMessagingRuntime;
 import com.immortalcrab.voltron.portage.ComIbmWsSibQueueFactory;
@@ -120,8 +121,12 @@ public class AlterationQueue extends XmlFormater {
     }
 
     private void setupQueueSession(ServerType st) {
+        ComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl propertyWasJms = new ObjectFactory()
+                .createComIbmWsJcaJmsQueuePropertiesWasJmsJavaxJmsQueueComIbmWsSibApiJmsImplJmsQueueImpl();
+        propertyWasJms.setDeliveryMode("Application");
         ComIbmWsJcaJmsQueueFactory session = new ObjectFactory().createComIbmWsJcaJmsQueueFactory();
         session.setJndiName(MessageFormat.format(QUEUE_SESSION_JNDI_TPL, new Object[]{mName}));
+        session.getPropertiesWasJms().add(propertyWasJms);
         st.getIncludeOrVariableOrWebApplication().add(session);
     }
 
