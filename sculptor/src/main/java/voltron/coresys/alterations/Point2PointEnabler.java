@@ -15,7 +15,6 @@ import com.immortalcrab.voltron.portage.ServerType;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javax.xml.bind.JAXBElement;
@@ -72,10 +71,9 @@ public class Point2PointEnabler extends XmlFormater {
                 .createComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory ();
         propertyWasJms.setNonPersistentMapping("ExpressNonPersistent");
         propertyWasJms.setPersistentMapping("ReliablePersistent");
-        JAXBElement<ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory> xxx = new JAXBElement<ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory>(new QName("properties.wasJms"),
+        JAXBElement<ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory> jbPropertyWasJms = new JAXBElement<ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory>(new QName("properties.wasJms"),
                                            ComIbmWsJcaJmsQueueConnectionFactoryPropertiesWasJmsJavaxJmsQueueConnectionFactory.class, propertyWasJms);
-        cff.getConnectionManagerOrContainerAuthDataOrJaasLoginContextEntry().add(xxx);
-        List<JAXBElement<?>> d = cff.getConnectionManagerOrContainerAuthDataOrJaasLoginContextEntry();
+        cff.getConnectionManagerOrContainerAuthDataOrJaasLoginContextEntry().add(jbPropertyWasJms);
         st.getIncludeOrVariableOrWebApplication().add(cff);
     }
 
