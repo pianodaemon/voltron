@@ -31,15 +31,17 @@ public class AlterationQueue extends XmlFormater {
     @Override
     public JAXBElement<ServerType> tailorHandler() throws SculptorException {
         ServerType st = getServer().getValue();
-        ComIbmWsMessagingRuntime messagingRuntime = obtainRuntime(st);
-        ComIbmWsSibQueueFactory sqf = makeQueue();
-        if (findQueueWithinRuntime(messagingRuntime, sqf)) {
-            throw new SculptorException("Queue is already present");
-        }
-        addQueueIntoRuntime(messagingRuntime, sqf);
+        configurePointToPoint(st);
+        return getServer();
+    }
+
+    /* Configuring point-to-point messaging for a single Liberty server
+     * https://www.ibm.com/docs/en/was-liberty/base?topic=server-configuring-point-point-messaging-single-liberty
+     */
+    private void configurePointToPoint(ServerType st) throws SculptorException {
+        setupMessagingEngine(st);
         setupQueueSession(st);
         setupQueueActivationSpec(st);
-        return getServer();
     }
 
     private ComIbmWsMessagingRuntime obtainRuntime(ServerType st) {
@@ -92,9 +94,17 @@ public class AlterationQueue extends XmlFormater {
     }
 
     private void setupQueueSession(ServerType st) {
-        // Declare a queue resource to create a Producer/Consumer session to the queue
         ComIbmWsJcaJmsQueueFactory session = new ObjectFactory().createComIbmWsJcaJmsQueueFactory();
         session.setJndiName(MessageFormat.format(QUEUE_SESSION_JNDI_TPL, new Object[]{mName}));
         st.getIncludeOrVariableOrWebApplication().add(session);
+    }
+
+    private void setupMessagingEngine(ServerType st) throws SculptorException {
+        ComIbmWsMessagingRuntime messagingRuntime = obtainRuntime(st);
+        ComIbmWsSibQueueFactory sqf = makeQueue();
+        if (findQueueWithinRuntime(messagingRuntime, sqf)) {
+            throw new SculptorException("Queue is already present");
+        }
+        addQueueIntoRuntime(messagingRuntime, sqf);
     }
 }
