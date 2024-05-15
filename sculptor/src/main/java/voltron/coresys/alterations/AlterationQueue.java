@@ -18,7 +18,7 @@ import javax.xml.bind.JAXBElement;
 import voltron.coresys.SculptorException;
 import voltron.coresys.tampering.XmlFormater;
 
-public class AlterationQueue extends XmlFormater {
+public class Point2PointEnabler extends XmlFormater {
 
     private static final Set<String> FEATURES_EXPECTED = new HashSet<>(Arrays.asList("wasJmsServer-1.0", "wasJmsClient-2.0", "jndi-1.0"));
     private static final String JMS_PREFIX = "jms";
@@ -29,7 +29,7 @@ public class AlterationQueue extends XmlFormater {
 
     private final String mName;
 
-    public AlterationQueue(String xmlFilePath, String name) throws SculptorException {
+    public Point2PointEnabler(String xmlFilePath, String name) throws SculptorException {
         super(xmlFilePath);
         mName = name;
     }
