@@ -6,6 +6,7 @@ import com.immortalcrab.voltron.portage.ComIbmWsMessagingRuntime;
 import com.immortalcrab.voltron.portage.ComIbmWsSibQueueFactory;
 import com.immortalcrab.voltron.portage.ObjectFactory;
 import com.immortalcrab.voltron.portage.ServerType;
+import java.text.MessageFormat;
 import java.util.Optional;
 import javax.xml.bind.JAXBElement;
 import voltron.coresys.SculptorException;
@@ -15,6 +16,7 @@ public class AlterationQueue extends XmlFormater {
 
     private static final String ACT_SPEC_POSTFIX = "Act_Spec";
     private static final String ACT_SPEC_DEST_TYPE = "javax.jms.Queue";
+    private static final String ACT_SPEC_ID_TPL = "jms/{0}_{1}";
 
     private final String mName;
 
@@ -80,7 +82,7 @@ public class AlterationQueue extends XmlFormater {
         propertyWasJms.setDestinationType(ACT_SPEC_DEST_TYPE);
         propertyWasJms.setDestinationRef(mName);
         ComIbmWsJcaJmsActivationSpecFactory aspec = new ObjectFactory().createComIbmWsJcaJmsActivationSpecFactory();
-        aspec.setId(mName + "_" + ACT_SPEC_POSTFIX);
+        aspec.setId(MessageFormat.format(ACT_SPEC_ID_TPL, new Object[]{mName, ACT_SPEC_POSTFIX}));
         aspec.getAuthDataOrPropertiesWasJms().add(propertyWasJms);
         st.getIncludeOrVariableOrWebApplication().add(aspec);
         return aspec;
