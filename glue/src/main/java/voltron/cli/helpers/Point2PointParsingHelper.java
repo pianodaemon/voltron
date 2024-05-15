@@ -10,12 +10,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import voltron.cli.GlobalConfig;
-import voltron.coresys.alterations.AlterationQueue;
+import voltron.coresys.alterations.Point2PointEnabler;
 import voltron.coresys.tampering.XmlFormater;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter(AccessLevel.PRIVATE)
-final public class QueueParsingHelper {
+final public class Point2PointParsingHelper {
 
     private static final int ACTION_ARG_IDX = 0;
     public static final Option OPTION_SUB_CMD = Option.builder("q")
@@ -32,7 +32,7 @@ final public class QueueParsingHelper {
     Options stemOptions;
 
     public static void tie(String[] args, CommandLineParser parser, Options options) throws Exception, SculptorException {
-        QueueParsingHelper qpHelper = new QueueParsingHelper(parser, options);
+        Point2PointParsingHelper qpHelper = new Point2PointParsingHelper(parser, options);
         qpHelper.doParsing(args, (cmdLine) -> {
             if (cmdLine.hasOption('q')) {
                 if (!(cmdLine.getArgs().length > 0)) {
@@ -48,7 +48,7 @@ final public class QueueParsingHelper {
         if (action.equals("new")) {
             System.out.println("This is the newer queue:" + queueName);
             XmlFormater xmlFormater;
-            xmlFormater = new AlterationQueue(GlobalConfig.getInstance().getSrvOriginal(), queueName);
+            xmlFormater = new Point2PointEnabler(GlobalConfig.getInstance().getSrvOriginal(), queueName);
             xmlFormater.renderFeaturingSave(GlobalConfig.getInstance().getSrvMadeUp());
         } else {
             throw new SculptorException("Such action has not been supported yet");
